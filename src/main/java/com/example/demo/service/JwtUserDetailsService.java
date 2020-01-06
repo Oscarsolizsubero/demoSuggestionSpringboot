@@ -2,9 +2,15 @@ package com.example.demo.service;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
-import com.example.demo.model.DTO.UserDTO;
+import com.example.demo.mapper.UserDetailsMapper;
+import com.example.demo.model.DTO.user.UserDTO;
+import com.example.demo.model.Role;
+import com.example.demo.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +28,9 @@ public class JwtUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder bcryptEncoder;
 
 
@@ -31,14 +40,21 @@ public class JwtUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                new ArrayList<>());
+        return UserDetailsMapper.build(user);
     }
 
-    public User save(UserDTO user) {
-        User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+    public User save(User user) {
+        Role userRole = roleRepository.findByName("USER");
+        Set<Role> roles = new HashSet<>();
+        roles.add(userRole);
+
+
+        User newUser = User.builder().username(user.getUsername())
+                        .password(bcryptEncoder.encode(user.getPassword()))
+                        .roles(roles).build();
         return userRepository.save(newUser);
+    }
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 }

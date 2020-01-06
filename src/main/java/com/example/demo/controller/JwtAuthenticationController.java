@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.DTO.UserDTO;
-import com.example.demo.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.mapper.UserMapper;
+import com.example.demo.model.DTO.user.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.service.JwtUserDetailsService;
 import com.example.demo.config.JwtTokenUtil;
-import com.example.demo.model.JwtRequest;
-import com.example.demo.model.JwtResponse;
+import com.example.demo.model.DTO.jwt.JwtRequest;
+import com.example.demo.model.DTO.jwt.JwtResponse;
 
 @RestController
 @CrossOrigin
@@ -47,7 +46,7 @@ public class JwtAuthenticationController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) throws Exception {
-        return ResponseEntity.ok(userDetailsService.save(user));
+        return ResponseEntity.ok(userDetailsService.save(UserMapper.toModel(user)));
     }
 
     private void authenticate(String username, String password) throws Exception {
