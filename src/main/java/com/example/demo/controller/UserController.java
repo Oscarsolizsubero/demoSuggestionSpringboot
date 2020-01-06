@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Employee;
 import com.example.demo.model.User;
 import com.example.demo.service.JwtUserDetailsService;
 import org.springframework.security.access.prepost.PreAuthorize;
