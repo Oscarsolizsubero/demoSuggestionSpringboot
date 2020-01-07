@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -41,6 +42,9 @@ public class User {
             @JoinColumn(name = "USER_ID")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles;
+
+    @OneToMany
+    private Set<Suggestion> suggestions;
 
     @ManyToMany
     @JoinTable(
