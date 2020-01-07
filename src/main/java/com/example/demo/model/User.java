@@ -15,6 +15,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="appuser")
 public class User {
 
     @Id
@@ -40,4 +41,11 @@ public class User {
             @JoinColumn(name = "USER_ID")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles;
+
+    @ManyToMany
+    @JoinTable(
+            name = "votes_like",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "suggestion_id"))
+    private Set<Suggestion> Suggestionslikes;
 }

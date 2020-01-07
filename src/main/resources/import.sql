@@ -1,6 +1,6 @@
 
 
-INSERT INTO user (id, username, password, enabled, TOKEN_EXPIRED) VALUES (1, 'admin', '$2y$12$svw6XfWfeK38mB9CVBUYsOWmY.jWP1sXBVIKnIlhVeOKPYGZwSCyq', true, false);
+INSERT INTO appuser (id, username, password, enabled, TOKEN_EXPIRED) VALUES (1, 'admin', '$2y$12$svw6XfWfeK38mB9CVBUYsOWmY.jWP1sXBVIKnIlhVeOKPYGZwSCyq', 1, 0);
 
 INSERT INTO role (id, description, name) VALUES (1, 'Admin role', 'ADMIN');
 INSERT INTO role (id, description, name) VALUES (2, 'User role', 'USER');
