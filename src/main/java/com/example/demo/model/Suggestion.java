@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,18 +27,19 @@ public class Suggestion {
     private String description;
 
     public int quantityVote;
-
+    @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     public Date createdDate;
 
+    @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     public Date updatedDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User author;
+    public User user;
 
-    @ManyToMany(mappedBy = "Suggestionslikes")
+    @ManyToMany(mappedBy = "suggestionslikes")
     public Set<User> votesUserSuggestions;
 
     public boolean deleted;

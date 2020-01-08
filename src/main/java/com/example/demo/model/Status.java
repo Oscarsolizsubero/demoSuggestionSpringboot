@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Status {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "status_generator")
-    @SequenceGenerator(name = "status_generator", initialValue = 100)
+    @SequenceGenerator(name = "status_generator", initialValue = 1)
     private long id;
     @Column(nullable = false)
     private String description ;

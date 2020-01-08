@@ -51,5 +51,5 @@ public class User {
             name = "votes_like",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "suggestion_id"))
-    private Set<Suggestion> Suggestionslikes;
+    private Set<Suggestion> suggestionslikes;
 }

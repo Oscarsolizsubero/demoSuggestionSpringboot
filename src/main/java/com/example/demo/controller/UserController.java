@@ -17,7 +17,7 @@ public class UserController {
     public UserController(JwtUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-    @PreAuthorize("hasRole('OPERATIONAL')")
+
     @GetMapping("/users")
     public List<User> getAllUsers() {
         return userDetailsService.findAll();

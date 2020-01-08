@@ -1,14 +1,12 @@
 package com.example.demo.service;
 
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 
-import com.example.demo.mapper.UserDetailsMapper;
-import com.example.demo.model.DTO.user.UserDTO;
+import com.example.demo.mapper.user.UserDetailsMapper;
 import com.example.demo.model.Role;
 import com.example.demo.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;

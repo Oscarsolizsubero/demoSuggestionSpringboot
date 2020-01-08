@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.mapper.UserMapper;
+import com.example.demo.mapper.user.UserMapper;
 import com.example.demo.model.DTO.user.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
