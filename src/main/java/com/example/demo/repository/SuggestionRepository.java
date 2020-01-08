@@ -16,7 +16,7 @@ public interface SuggestionRepository extends CrudRepository<Suggestion, Long> {
     @Query("select s from Suggestion s where s.status.id=:id")
     List<Suggestion> findByStatusId(@Param("id") long statusId);
 
-    boolean existsByAuthorId(long id);
+    boolean existsByUserId(long id);
     @Modifying
     @Transactional
     @Query(value ="insert into votes_like (user_id, suggestion_id) values (:user_id, :suggestion_id)",

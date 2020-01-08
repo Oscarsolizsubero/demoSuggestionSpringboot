@@ -26,25 +26,25 @@ public class Suggestion {
     @Column(nullable = false)
     private String description;
 
-    public int quantityVote;
+    private int quantityVote;
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    public Date createdDate;
+    private Date createdDate;
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    public Date updatedDate;
+    private Date updatedDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User user;
+    private User user;
 
-    @ManyToMany(mappedBy = "suggestionslikes")
-    public Set<User> votesUserSuggestions;
+    @ManyToMany(mappedBy = "suggestionsLikes")
+    private Set<User> votesUserSuggestions;
 
-    public boolean deleted;
+    private boolean deleted;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id", referencedColumnName = "id")
-    public Status status;
+    private Status status;
 
 }
