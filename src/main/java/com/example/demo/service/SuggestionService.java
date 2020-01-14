@@ -27,7 +27,7 @@ public class SuggestionService {
     public List<Suggestion> findAll(String username) {
         List<Status> statusesSearch = statusRepository.findByDescriptionIn(Arrays.asList("Suggested", "Fulfilled"));
         User user = userRepository.findByUsername(username);
-        
+
         if (user==null) {
             return suggestionRepository.findByStatusIdByOrderByQuantityVote(statusesSearch);
         }
@@ -59,12 +59,11 @@ public class SuggestionService {
     public Suggestion vote(long suggestionId, String username) {
         User user = userRepository.findByUsername(username);
         Suggestion suggestion = suggestionRepository.findById(suggestionId);
-        if (!user.isAdmin()) {
-            if (!suggestion.canBeVoteByNormalUser()) {
+        if (!user.isAdmin() && !suggestion.canBeVoteByNormalUser()) {
                 return null;
-            }
         }
-        if (userHasVoted(suggestion,user)){
+        //check if user has voted
+        if (voteRepository.findByUserAndSuggestion(user,suggestion)!=null){
             return deleteAndVote(suggestion, user);
         }
         return saveAndVote(suggestion, user);
@@ -78,10 +77,6 @@ public class SuggestionService {
         }
         suggestion.setStatus(status);
         return suggestionRepository.save(suggestion);
-    }
-
-    private boolean userHasVoted(Suggestion suggestion, User user) {
-        return voteRepository.findByUserAndSuggestion(user,suggestion)!=null;
     }
 
     private Suggestion saveAndVote(Suggestion suggestion, User user) {
