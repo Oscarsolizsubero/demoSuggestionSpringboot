@@ -1,15 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.config.JwtTokenUtil;
-import com.example.demo.model.DTO.suggestion.SuggestionDTO;
-import com.example.demo.model.DTO.suggestion.SuggestionEditStatusDTO;
-import com.example.demo.model.DTO.vote.VoteDTO;
 import com.example.demo.model.Status;
 import com.example.demo.model.Suggestion;
 import com.example.demo.model.User;
 import com.example.demo.model.Vote;
 import com.example.demo.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,14 +14,12 @@ public class SuggestionService {
 
     private final UserRepository userRepository;
     private final SuggestionRepository suggestionRepository;
-    private final RoleRepository roleRepository;
     private final StatusRepository statusRepository;
     private final VoteRepository voteRepository;
 
-    public SuggestionService(UserRepository userRepository, SuggestionRepository suggestionRepository, RoleRepository roleRepository, StatusRepository statusRepository, VoteRepository voteRepository) {
+    public SuggestionService(UserRepository userRepository, SuggestionRepository suggestionRepository, StatusRepository statusRepository, VoteRepository voteRepository) {
         this.userRepository = userRepository;
         this.suggestionRepository = suggestionRepository;
-        this.roleRepository = roleRepository;
         this.statusRepository = statusRepository;
         this.voteRepository = voteRepository;
     }
@@ -35,10 +28,9 @@ public class SuggestionService {
         List<Status> statusesSearch = statusRepository.findByDescriptionIn(Arrays.asList("Suggested", "Fulfilled"));
         User user = userRepository.findByUsername(username);
         if (user != null) {
-            if (userIsAdmin(user)) {
+            if (user.isAdmin()) {
                 return suggestionRepository.findAllByOrderByQuantityVoteDesc();
             }
-            return suggestionRepository.findByStatusIdByOrderByQuantityVote(statusesSearch);
         }
         return suggestionRepository.findByStatusIdByOrderByQuantityVote(statusesSearch);
     }
@@ -48,13 +40,13 @@ public class SuggestionService {
         suggestion.setUser(user);
         suggestion.setCreatedDate(new Date());
         Status status;
-        if (userIsAdmin(user)) {
+        if (user.isAdmin()) {
             status = statusRepository.findByDescription("Suggested");
         } else {
             status = statusRepository.findByDescription("New");
         }
         suggestion.setStatus(status);
-        return saveVote(suggestion,user);
+        return saveAndVote(suggestion,user);
     }
 
     public List<Vote> findVotes(String username) {
@@ -62,19 +54,18 @@ public class SuggestionService {
         return voteRepository.findAllByUser(user);
     }
 
-
     public Suggestion vote(long suggestionId, String username) {
         User user = userRepository.findByUsername(username);
         Suggestion suggestion = suggestionRepository.findById(suggestionId);
-        if (!userIsAdmin(user)) {
-            if (!normalUserCanVote(suggestion.getStatus().getDescription())) {
+        if (!user.isAdmin()) {
+            if (!suggestion.canBeVoteByNormalUser()) {
                 return null;
             }
         }
         if (userHasVoted(suggestion,user)){
-            return deleteVote(suggestion, user);
+            return deleteAndVote(suggestion, user);
         }
-        return saveVote(suggestion, user);
+        return saveAndVote(suggestion, user);
     }
 
     public Suggestion editSuggestionStatus(long suggestionId,String newStatus) {
@@ -94,7 +85,7 @@ public class SuggestionService {
         return false;
     }
 
-    private Suggestion saveVote(Suggestion suggestion, User user) {
+    private Suggestion saveAndVote(Suggestion suggestion, User user) {
         suggestion.setQuantityVote(suggestion.getQuantityVote() + 1);
         Suggestion s = suggestionRepository.save(suggestion);
         Vote vote = Vote.builder().user(user).suggestion(s).build();
@@ -102,22 +93,10 @@ public class SuggestionService {
         return s;
     }
 
-    private Suggestion deleteVote(Suggestion suggestion, User user) {
+    private Suggestion deleteAndVote(Suggestion suggestion, User user) {
         suggestion.setQuantityVote(suggestion.getQuantityVote() - 1);
         Suggestion s = suggestionRepository.save(suggestion);
         voteRepository.delete(voteRepository.findByUserAndSuggestion(user,suggestion));
         return s;
-    }
-
-    private boolean userIsAdmin(User user) {
-        if (user.getRoles().contains(roleRepository.findByName("ADMIN")) ||
-                user.getRoles().contains(roleRepository.findByName("MODERATOR"))) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean normalUserCanVote(String suggestion) {
-        return suggestion.equals("Suggested") || suggestion.equals("Fulfilled");
     }
 }
