@@ -79,10 +79,7 @@ public class SuggestionService {
     }
 
     private boolean userHasVoted(Suggestion suggestion, User user) {
-        if (voteRepository.findByUserAndSuggestion(user,suggestion)!=null) {
-            return true;
-        }
-        return false;
+        return voteRepository.findByUserAndSuggestion(user,suggestion)!=null;
     }
 
     private Suggestion saveAndVote(Suggestion suggestion, User user) {

@@ -15,7 +15,6 @@ import java.util.List;
 
 public class SuggestionMapper {
 
-
     public static Suggestion suggestionToModel(SuggestionAddDTO suggestionAddDTO,String username){
         User u = User.builder().username(username).build();
         return Suggestion.builder().title(suggestionAddDTO.getTitle()).description(suggestionAddDTO.getDescription()).user(u).build();
@@ -36,26 +35,7 @@ public class SuggestionMapper {
     }
     public static List<SuggestionDTO> suggestionsToResponse(List<Suggestion> suggestions, List<Vote> uservoted){
         List<SuggestionDTO> lists = new ArrayList<>();
-        suggestions.forEach(s-> lists.add(SuggestionDTO.builder()
-                .id(s.getId())
-                .title(s.getTitle())
-                .createdDate(s.getCreatedDate())
-                .quantityVote(s.getQuantityVote())
-                .description(s.getDescription())
-                .updatedDate(s.getUpdatedDate())
-                .status(s.getStatus())
-                .user(UserResponse.builder().id(s.getUser().getId()).name(s.getUser().getUsername()).build())
-                .isVoted(uservoted.stream().anyMatch(uv-> uv.getSuggestion().getId() == s.getId() && uv.getUser().getId()==s.getUser().getId()))
-                .build()));
+        suggestions.forEach(s-> lists.add(suggestionToResponse(s,uservoted)));
         return lists;
-    }
-    private static boolean isVoted(long suggestionId,long userId, List<Vote> uservoted)
-    {
-        boolean flag = false;
-        if(uservoted.stream().anyMatch(uv-> uv.getSuggestion().getId() == suggestionId && uv.getUser().getId()==userId))
-        {
-            flag = true;
-        }
-        return flag;
     }
 }
