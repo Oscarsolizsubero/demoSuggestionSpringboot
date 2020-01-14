@@ -25,16 +25,16 @@ public class SuggestionService {
     }
 
     public List<Suggestion> findAll(String username) {
-        List<Status> statusesSearch = statusRepository.findByDescriptionIn(Arrays.asList("Suggested", "Fulfilled"));
+        List<Status> publicStatuses = statusRepository.findByDescriptionIn(Arrays.asList("Suggested", "Fulfilled"));
         User user = userRepository.findByUsername(username);
 
         if (user==null) {
-            return suggestionRepository.findByStatusIdByOrderByQuantityVote(statusesSearch);
+            return suggestionRepository.findByStatusIdByOrderByQuantityVote(publicStatuses);
         }
         if(user.isAdmin()){
             return suggestionRepository.findAllByOrderByQuantityVoteDesc();
         }
-        return suggestionRepository.findByStatusIdByOrderByQuantityVote(statusesSearch);
+        return suggestionRepository.findByStatusIdByOrderByQuantityVote(publicStatuses);
     }
 
     public Suggestion save(Suggestion suggestion) {
