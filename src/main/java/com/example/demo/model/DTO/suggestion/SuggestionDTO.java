@@ -6,16 +6,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
+@Data
+@Builder
+@AllArgsConstructor
+public class SuggestionDTO {
 
-public class SuggestionDTO extends SuggestionAddDTO{
+    private long id;
+    @Length(min = 3, max = 125)
+    private String title;
 
-    private int id;
-
+    @Length(min = 3, max = 8000)
+    private String description;
     private int quantityVote;
 
     @Temporal(TemporalType.TIMESTAMP)

@@ -8,12 +8,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Data
 public class SuggestionEditStatusDTO {
-
-    @Length(min = 3, max = 125)
-    private long id;
-
+    private long suggestionId;
     @Length(min = 3, max = 8000)
-    private long statusId;
-
-    private long idAuthor;
+    private String statusDescription;
 }

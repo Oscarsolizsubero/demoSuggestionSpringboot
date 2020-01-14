@@ -23,7 +23,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
     @SequenceGenerator(name = "user_generator", initialValue = 100)
     private long id;
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     private String username;
     @Column(nullable = false)
     @JsonIgnore
@@ -42,14 +42,4 @@ public class User {
             @JoinColumn(name = "USER_ID")}, inverseJoinColumns = {
             @JoinColumn(name = "ROLE_ID")})
     private Set<Role> roles;
-
-    @OneToMany
-    private Set<Suggestion> suggestions;
-
-    @ManyToMany
-    @JoinTable(
-            name = "votes_like",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "suggestion_id"))
-    private Set<Suggestion> suggestionsLikes;
 }
