@@ -17,6 +17,12 @@ public class SuggestionService {
     private final StatusRepository statusRepository;
     private final VoteRepository voteRepository;
 
+    private static final String STATUS_NEW = "New";
+
+    private static final String STATUS_SUGGESTED = "Suggested";
+
+    private static final String STATUS_FULFILLED = "Fulfilled";
+
     public SuggestionService(UserRepository userRepository, SuggestionRepository suggestionRepository, StatusRepository statusRepository, VoteRepository voteRepository) {
         this.userRepository = userRepository;
         this.suggestionRepository = suggestionRepository;
@@ -25,7 +31,7 @@ public class SuggestionService {
     }
 
     public List<Suggestion> findAll(String username) {
-        List<Status> publicStatuses = statusRepository.findByNameIn(Arrays.asList("Suggested", "Fulfilled"));
+        List<Status> publicStatuses = statusRepository.findByNameIn(Arrays.asList(STATUS_SUGGESTED, STATUS_FULFILLED));
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
@@ -43,9 +49,9 @@ public class SuggestionService {
         suggestion.setCreatedDate(new Date());
         Status status;
         if (user.isAdmin()) {
-            status = statusRepository.findByName("Suggested");
+            status = statusRepository.findByName(STATUS_SUGGESTED);
         } else {
-            status = statusRepository.findByName("New");
+            status = statusRepository.findByName(STATUS_NEW);
         }
         suggestion.setStatus(status);
         return saveAndVote(suggestion, user);
