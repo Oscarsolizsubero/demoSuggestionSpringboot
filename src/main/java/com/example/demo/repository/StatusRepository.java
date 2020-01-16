@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface StatusRepository extends CrudRepository<Status, Long> {
-    Status findByDescription(String description);
-    @Query("select s from Status s where s.description in :descriptions")
-    List<Status> findByDescriptionIn(@Param("descriptions") List<String> statusDescriptions);
+    Status findByName(String name);
+    @Query("select s from Status s where s.name in :descriptions")
+    List<Status> findByNameIn(@Param("descriptions") List<String> statusDescriptions);
 }

@@ -9,7 +9,6 @@ import com.example.demo.model.DTO.vote.VoteDTO;
 import com.example.demo.model.Suggestion;
 import com.example.demo.model.Vote;
 import com.example.demo.service.SuggestionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,46 +29,47 @@ public class SuggestionController {
     }
 
     @GetMapping("/suggestions")
-    public List<SuggestionDTO> getAllSuggestions(@RequestHeader(value = "Authorization",required = false) String token) {
-        if(token==null) {
-            token="";
+    public ResponseEntity<List<SuggestionDTO>> getAllSuggestions(@RequestHeader(value = "Authorization", required = false) String token) {
+        if (token == null) {
+            token = "";
         }
         String user = jwtTokenUtil.getUsernameFromTokenWithBearer(token);
         final List<Suggestion> suggestions = suggestionService.findAll(user);
 
 
         final List<Vote> uservoted = suggestionService.findVotes(user);
-        List<SuggestionDTO> suggestionsResponse = SuggestionMapper.suggestionsToResponse(suggestions,uservoted);
-        return suggestionsResponse;
+        List<SuggestionDTO> suggestionsResponse = SuggestionMapper.suggestionsToResponse(suggestions, uservoted);
+        return new ResponseEntity<>(suggestionsResponse, HttpStatus.OK);
 
     }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity < SuggestionDTO >createSuggestion(@RequestBody SuggestionAddDTO suggestionAdd, @RequestHeader("Authorization") String token){
+    public ResponseEntity<SuggestionDTO> createSuggestion(@RequestBody SuggestionAddDTO suggestionAdd, @RequestHeader("Authorization") String token) {
         String user = jwtTokenUtil.getUsernameFromTokenWithBearer(token);
         final Suggestion suggestionToSave = suggestionService.save(SuggestionMapper.suggestionToModel(suggestionAdd, user));
         final List<Vote> uservoted = suggestionService.findVotes(user);
-        SuggestionDTO suggestionResponse= SuggestionMapper.suggestionToResponse(suggestionToSave,uservoted);
+        SuggestionDTO suggestionResponse = SuggestionMapper.suggestionToResponse(suggestionToSave, uservoted);
         return new ResponseEntity<>(suggestionResponse, HttpStatus.OK);
     }
 
     @PostMapping("/vote")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity < SuggestionDTO >voteSuggestion(@RequestBody VoteDTO vote, @RequestHeader("Authorization") String token){
+    public ResponseEntity<SuggestionDTO> voteSuggestion(@RequestBody VoteDTO vote, @RequestHeader("Authorization") String token) {
         String user = jwtTokenUtil.getUsernameFromTokenWithBearer(token);
-        final Suggestion suggestionRetrieved = suggestionService.vote(vote.getSuggestionId(),user);
+        final Suggestion suggestionRetrieved = suggestionService.vote(vote.getSuggestionId(), user);
         final List<Vote> uservoted = suggestionService.findVotes(user);
-        SuggestionDTO suggestionResponse= SuggestionMapper.suggestionToResponse(suggestionRetrieved,uservoted);
+        SuggestionDTO suggestionResponse = SuggestionMapper.suggestionToResponse(suggestionRetrieved, uservoted);
         return new ResponseEntity<>(suggestionResponse, HttpStatus.OK);
     }
+
     @PutMapping("/edit/status")
     @PreAuthorize("hasRole('ADMIN') OR hasRole('MODERATOR')")
-    public ResponseEntity < SuggestionDTO >editStatusSuggestion(@RequestBody SuggestionEditStatusDTO newStatus, @RequestHeader("Authorization") String token){
+    public ResponseEntity<SuggestionDTO> editStatusSuggestion(@RequestBody SuggestionEditStatusDTO newStatus, @RequestHeader("Authorization") String token) {
         String user = jwtTokenUtil.getUsernameFromTokenWithBearer(token);
-        final Suggestion suggestionRetrieved = suggestionService.editSuggestionStatus(newStatus.getSuggestionId(),newStatus.getStatusDescription());
+        final Suggestion suggestionRetrieved = suggestionService.editSuggestionStatus(newStatus.getSuggestionId(), newStatus.getStatusDescription());
         final List<Vote> uservoted = suggestionService.findVotes(user);
-        SuggestionDTO suggestionResponse= SuggestionMapper.suggestionToResponse(suggestionRetrieved,uservoted);
+        SuggestionDTO suggestionResponse = SuggestionMapper.suggestionToResponse(suggestionRetrieved, uservoted);
         return new ResponseEntity<>(suggestionResponse, HttpStatus.OK);
     }
 }

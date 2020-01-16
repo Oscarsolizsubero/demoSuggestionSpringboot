@@ -25,13 +25,13 @@ public class SuggestionService {
     }
 
     public List<Suggestion> findAll(String username) {
-        List<Status> publicStatuses = statusRepository.findByDescriptionIn(Arrays.asList("Suggested", "Fulfilled"));
+        List<Status> publicStatuses = statusRepository.findByNameIn(Arrays.asList("Suggested", "Fulfilled"));
         User user = userRepository.findByUsername(username);
 
-        if (user==null) {
+        if (user == null) {
             return suggestionRepository.findByStatusIdByOrderByQuantityVote(publicStatuses);
         }
-        if(user.isAdmin()){
+        if (user.isAdmin()) {
             return suggestionRepository.findAllByOrderByQuantityVoteDesc();
         }
         return suggestionRepository.findByStatusIdByOrderByQuantityVote(publicStatuses);
@@ -43,12 +43,12 @@ public class SuggestionService {
         suggestion.setCreatedDate(new Date());
         Status status;
         if (user.isAdmin()) {
-            status = statusRepository.findByDescription("Suggested");
+            status = statusRepository.findByName("Suggested");
         } else {
-            status = statusRepository.findByDescription("New");
+            status = statusRepository.findByName("New");
         }
         suggestion.setStatus(status);
-        return saveAndVote(suggestion,user);
+        return saveAndVote(suggestion, user);
     }
 
     public List<Vote> findVotes(String username) {
@@ -60,19 +60,19 @@ public class SuggestionService {
         User user = userRepository.findByUsername(username);
         Suggestion suggestion = suggestionRepository.findById(suggestionId);
         if (!user.isAdmin() && !suggestion.canBeVoteByNormalUser()) {
-                return null;
+            return null;
         }
         //check if user has voted
-        if (voteRepository.findByUserAndSuggestion(user,suggestion)!=null){
+        if (voteRepository.findByUserAndSuggestion(user, suggestion) != null) {
             return deleteAndVote(suggestion, user);
         }
         return saveAndVote(suggestion, user);
     }
 
-    public Suggestion editSuggestionStatus(long suggestionId,String newStatus) {
+    public Suggestion editSuggestionStatus(long suggestionId, String newStatus) {
         Suggestion suggestion = suggestionRepository.findById(suggestionId);
-        Status status = statusRepository.findByDescription(newStatus);
-        if(status==null){
+        Status status = statusRepository.findByName(newStatus);
+        if (status == null) {
             return null;
         }
         suggestion.setStatus(status);
@@ -90,7 +90,7 @@ public class SuggestionService {
     private Suggestion deleteAndVote(Suggestion suggestion, User user) {
         suggestion.setQuantityVote(suggestion.getQuantityVote() - 1);
         Suggestion s = suggestionRepository.save(suggestion);
-        voteRepository.delete(voteRepository.findByUserAndSuggestion(user,suggestion));
+        voteRepository.delete(voteRepository.findByUserAndSuggestion(user, suggestion));
         return s;
     }
 }

@@ -16,8 +16,14 @@ import java.util.List;
 public class SuggestionMapper {
 
     public static Suggestion suggestionToModel(SuggestionAddDTO suggestionAddDTO,String username){
-        User u = User.builder().username(username).build();
-        return Suggestion.builder().title(suggestionAddDTO.getTitle()).description(suggestionAddDTO.getDescription()).user(u).build();
+        User u = User.builder()
+                .username(username)
+                .build();
+        return Suggestion.builder()
+                .title(suggestionAddDTO.getTitle())
+                .description(suggestionAddDTO.getDescription())
+                .user(u)
+                .build();
 
     }
     public static SuggestionDTO suggestionToResponse(Suggestion suggestion, List<Vote> uservoted){
@@ -29,7 +35,10 @@ public class SuggestionMapper {
                 .description(suggestion.getDescription())
                 .updatedDate(suggestion.getUpdatedDate())
                 .status(suggestion.getStatus())
-                .user(UserResponse.builder().id(suggestion.getUser().getId()).name(suggestion.getUser().getUsername()).build())
+                .user(UserResponse.builder()
+                        .id(suggestion.getUser().getId())
+                        .name(suggestion.getUser().getUsername())
+                        .build())
                 .isVoted(uservoted.stream().anyMatch(uv-> uv.getSuggestion().getId() == suggestion.getId() && uv.getUser().getId()==suggestion.getUser().getId()))
                 .build();
     }

@@ -10,11 +10,16 @@ public class UserMapper {
     }
 
     public static UserResponse toResponse(User user) {
-        return UserResponse.builder().name(user.getName()).id(user.getId()).build();
+        return UserResponse.builder()
+                .name(user.getName())
+                .id(user.getId())
+                .build();
     }
 
     public static User toModel(UserDTO authorizationRequest) {
-        return User.builder().name(authorizationRequest.getUsername()).password(authorizationRequest.getPassword())
+        return User.builder()
+                .name(authorizationRequest.getUsername())
+                .password(authorizationRequest.getPassword())
                 .build();
     }
 

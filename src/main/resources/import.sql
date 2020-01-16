@@ -1,8 +1,8 @@
 
-INSERT INTO status (id, description) VALUES (1, 'New');
-INSERT INTO status (id, description) VALUES (2, 'Suggested');
-INSERT INTO status (id, description) VALUES (3, 'Rejected');
-INSERT INTO status (id, description) VALUES (4, 'Fulfilled');
+INSERT INTO status (id, name) VALUES (1, 'New');
+INSERT INTO status (id, name) VALUES (2, 'Suggested');
+INSERT INTO status (id, name) VALUES (3, 'Rejected');
+INSERT INTO status (id, name) VALUES (4, 'Fulfilled');
 
 INSERT INTO appuser (id, username, password, enabled, TOKEN_EXPIRED) VALUES (1, 'admin', '$2y$12$svw6XfWfeK38mB9CVBUYsOWmY.jWP1sXBVIKnIlhVeOKPYGZwSCyq', 1, 0);
 INSERT INTO appuser (id, username, password, enabled, TOKEN_EXPIRED) VALUES (2, 'user1', '$2y$12$svw6XfWfeK38mB9CVBUYsOWmY.jWP1sXBVIKnIlhVeOKPYGZwSCyq', 1, 0);

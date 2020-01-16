@@ -48,11 +48,12 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 
         User newUser = User.builder().username(user.getUsername())
-                        .password(bcryptEncoder.encode(user.getPassword()))
-                        .roles(roles).build();
+                .password(bcryptEncoder.encode(user.getPassword()))
+                .roles(roles).build();
         return userRepository.save(newUser);
     }
-    public List<User> findAll(){
+
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 }

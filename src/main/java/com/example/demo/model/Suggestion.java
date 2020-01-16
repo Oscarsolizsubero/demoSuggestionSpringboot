@@ -40,13 +40,12 @@ public class Suggestion {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    private boolean deleted;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "status_id", referencedColumnName = "id")
     private Status status;
 
     @Transient
     public boolean canBeVoteByNormalUser(){
-        return this.getStatus().getDescription().equals("Suggested")||this.getStatus().getDescription().equals("Suggested");
+        return this.getStatus().getName().equals("Suggested")||this.getStatus().getName().equals("Suggested");
     }
 }

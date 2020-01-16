@@ -17,5 +17,5 @@ public class Status {
     @SequenceGenerator(name = "status_generator", initialValue = 1)
     private long id;
     @Column(nullable = false)
-    private String description ;
+    private String name ;
 }
