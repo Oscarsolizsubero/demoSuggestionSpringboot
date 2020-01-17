@@ -68,7 +68,6 @@ public class SuggestionService {
         if (!user.isAdmin() && !suggestion.canBeVoteByNormalUser()) {
             return null;
         }
-        //check if user has voted
         if (voteRepository.findByUserAndSuggestion(user, suggestion) != null) {
             return deleteAndVote(suggestion, user);
         }
